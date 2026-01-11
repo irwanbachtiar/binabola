@@ -15,12 +15,24 @@
                 <form action="{{ route('siswa.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
-                    <!-- Email (hidden) -->
-                    <input type="hidden" name="email" value="{{ old('email') }}">
+                    <!-- Nama Siswa -->
+                    <div class="mb-3">
+                        <label for="nama" class="form-label">
+                            Nama Siswa <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control @error('nama') is-invalid @enderror" 
+                               id="nama" 
+                               name="nama" 
+                               value="{{ old('nama') }}" 
+                               required>
                         @error('nama')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <!-- Email (hidden) -->
+                    <input type="hidden" name="email" value="{{ old('email') }}">
 
                     <!-- Foto -->
                     <div class="mb-3">

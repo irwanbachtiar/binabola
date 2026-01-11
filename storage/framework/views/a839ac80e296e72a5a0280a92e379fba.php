@@ -13,8 +13,24 @@
                 <form action="<?php echo e(route('siswa.store')); ?>" method="POST" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     
-                    <!-- Email (hidden) -->
-                    <input type="hidden" name="email" value="<?php echo e(old('email')); ?>">
+                    <!-- Nama Siswa -->
+                    <div class="mb-3">
+                        <label for="nama" class="form-label">
+                            Nama Siswa <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control <?php $__errorArgs = ['nama'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
+                               id="nama" 
+                               name="nama" 
+                               value="<?php echo e(old('nama')); ?>" 
+                               required>
                         <?php $__errorArgs = ['nama'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -26,6 +42,9 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
+
+                    <!-- Email (hidden) -->
+                    <input type="hidden" name="email" value="<?php echo e(old('email')); ?>">
 
                     <!-- Foto -->
                     <div class="mb-3">
