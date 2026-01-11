@@ -32,6 +32,14 @@
                                 @error('tanggal_lahir')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
+                            <!-- Tanggal Masuk -->
+                            <div class="mb-3">
+                                <label for="tanggal_masuk" class="form-label">Tanggal Masuk / Daftar <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('tanggal_masuk') is-invalid @enderror" id="tanggal_masuk" name="tanggal_masuk" value="{{ old('tanggal_masuk', $siswa->tanggal_masuk ? $siswa->tanggal_masuk->format('Y-m-d') : '') }}" required>
+                                <small class="text-muted">Tanggal siswa mulai bergabung di sekolah sepak bola</small>
+                                @error('tanggal_masuk')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+
                             <!-- Telepon -->
                             <div class="mb-3">
                                 <label for="telepon" class="form-label">Nomor Telepon</label>
@@ -84,6 +92,29 @@
                                 </select>
                                 @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+
+                            <!-- Paket Iuran -->
+                            <div class="mb-3">
+                                <label for="paket_iuran_id" class="form-label">
+                                    <i class="bi bi-cash-coin"></i> Paket Iuran Bulanan
+                                </label>
+                                <select class="form-select @error('paket_iuran_id') is-invalid @enderror" 
+                                        id="paket_iuran_id" 
+                                        name="paket_iuran_id">
+                                    <option value="">-- Pilih Paket Iuran (Opsional) --</option>
+                                    @foreach($pakets as $paket)
+                                        <option value="{{ $paket->id }}" 
+                                                data-nominal="{{ $paket->nominal }}"
+                                                {{ old('paket_iuran_id', $siswa->paket_iuran_id) == $paket->id ? 'selected' : '' }}>
+                                            {{ $paket->nama_paket }} ({{ $paket->kelompok_umur }}) - {{ $paket->nominal_format }}/{{ $paket->durasi_bulan }} bulan
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="text-muted">Paket iuran bulanan yang akan dibayarkan oleh siswa</small>
+                                @error('paket_iuran_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -99,7 +130,7 @@
                         <label class="form-label">Minat Posisi <span class="text-danger">*</span></label>
                         <small class="text-muted d-block mb-2">Pilih satu atau lebih posisi</small>
                         @php
-                            $posisiList = ['Kiper', 'Bek Kiri', 'Bek Tengah', 'Bek Kanan', 'Gelandang Bertahan', 'Gelandang Tengah', 'Gelandang Serang', 'Sayap Kiri', 'Sayap Kanan', 'Striker'];
+                            $posisiList = ['Kiper', 'Belakang', 'Tengah', 'Striker'];
                             $selectedPosisi = old('minat_posisi', $siswa->minat_posisi ?? []);
                         @endphp
                         <div class="border rounded p-3 @error('minat_posisi') border-danger @enderror">
@@ -117,6 +148,67 @@
                         @error('minat_posisi')<div class="text-danger small mt-1">{{ $message }}</div>@enderror
                     </div>
 
+                    <!-- Akun Orangtua -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="bi bi-person-badge"></i> Hubungkan dengan Akun Orangtua
+                        </label>
+                        <small class="text-muted d-block mb-2">Cari dan pilih akun orangtua yang akan terhubung dengan siswa ini</small>
+                        
+                        @if($orangtuaUsers->isEmpty())
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle"></i> Belum ada akun orangtua. 
+                                <a href="{{ route('admin.users.create') }}" target="_blank">Buat akun orangtua</a> terlebih dahulu.
+                            </div>
+                        @else
+                            <!-- Search Input -->
+                            <div class="mb-2">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="searchOrangtua" 
+                                           placeholder="Cari nama atau email orangtua...">
+                                </div>
+                            </div>
+
+                            <!-- Selected Items -->
+                            <div id="selectedOrangtua" class="mb-2" style="min-height: 40px;">
+                                <!-- Selected items will appear here -->
+                            </div>
+
+                            <!-- Dropdown List -->
+                            <div class="border rounded" style="max-height: 300px; overflow-y: auto;">
+                                <div id="orangtuaList">
+                                    @foreach($orangtuaUsers as $orangtua)
+                                    <div class="orangtua-item p-2 border-bottom" 
+                                         data-id="{{ $orangtua->id }}" 
+                                         data-name="{{ $orangtua->name }}" 
+                                         data-email="{{ $orangtua->email }}"
+                                         style="cursor: pointer;">
+                                        <div class="form-check">
+                                            <input class="form-check-input orangtua-checkbox" 
+                                                   type="checkbox" 
+                                                   name="orangtua_ids[]" 
+                                                   value="{{ $orangtua->id }}" 
+                                                   id="orangtua_{{ $orangtua->id }}"
+                                                   {{ in_array($orangtua->id, old('orangtua_ids', $assignedOrangtuaIds)) ? 'checked' : '' }}>
+                                            <label class="form-check-label w-100" for="orangtua_{{ $orangtua->id }}" style="cursor: pointer;">
+                                                <strong>{{ $orangtua->name }}</strong>
+                                                <br>
+                                                <small class="text-muted">{{ $orangtua->email }}</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div id="noResults" class="text-center text-muted p-3" style="display: none;">
+                                    <i class="bi bi-search"></i> Tidak ada hasil ditemukan
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
                     <div class="d-flex justify-content-between mt-4">
                         <a href="{{ route('siswa.index') }}" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Kembali</a>
                         <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Update Data</button>
@@ -127,3 +219,137 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<style>
+    .orangtua-item:hover {
+        background-color: #f8f9fa;
+    }
+    .orangtua-item.selected {
+        background-color: #e7f3ff;
+    }
+    .selected-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: #0d6efd;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        margin: 3px;
+        font-size: 14px;
+    }
+    .selected-badge .remove-btn {
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        opacity: 0.8;
+    }
+    .selected-badge .remove-btn:hover {
+        opacity: 1;
+    }
+    #selectedOrangtua:empty::before {
+        content: 'Belum ada orangtua yang dipilih';
+        color: #6c757d;
+        font-style: italic;
+        font-size: 14px;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchOrangtua');
+    const orangtuaList = document.getElementById('orangtuaList');
+    const selectedContainer = document.getElementById('selectedOrangtua');
+    const noResults = document.getElementById('noResults');
+    
+    if (!searchInput || !orangtuaList) return;
+
+    // Search functionality
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const items = orangtuaList.querySelectorAll('.orangtua-item');
+        let visibleCount = 0;
+
+        items.forEach(item => {
+            const name = item.dataset.name.toLowerCase();
+            const email = item.dataset.email.toLowerCase();
+            
+            if (name.includes(searchTerm) || email.includes(searchTerm)) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+
+    // Handle checkbox changes
+    const checkboxes = document.querySelectorAll('.orangtua-checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        // Initialize selected items
+        if (checkbox.checked) {
+            checkbox.closest('.orangtua-item').classList.add('selected');
+        }
+        
+        updateSelectedDisplay();
+
+        checkbox.addEventListener('change', function() {
+            const item = this.closest('.orangtua-item');
+            
+            if (this.checked) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+            
+            updateSelectedDisplay();
+        });
+    });
+
+    // Handle item click (toggle checkbox)
+    const items = orangtuaList.querySelectorAll('.orangtua-item');
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
+                return;
+            }
+            
+            const checkbox = this.querySelector('.orangtua-checkbox');
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(new Event('change'));
+        });
+    });
+
+    function updateSelectedDisplay() {
+        selectedContainer.innerHTML = '';
+        
+        const checkedBoxes = document.querySelectorAll('.orangtua-checkbox:checked');
+        
+        checkedBoxes.forEach(checkbox => {
+            const item = checkbox.closest('.orangtua-item');
+            const name = item.dataset.name;
+            const email = item.dataset.email;
+            
+            const badge = document.createElement('span');
+            badge.className = 'selected-badge';
+            badge.innerHTML = `
+                <span>${name}</span>
+                <span class="remove-btn" data-id="${checkbox.value}">×</span>
+            `;
+            
+            badge.querySelector('.remove-btn').addEventListener('click', function() {
+                checkbox.checked = false;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+            
+            selectedContainer.appendChild(badge);
+        });
+    }
+});
+</script>
+@endpush

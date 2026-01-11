@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    // Helper: Detect mobile device
+    private function isMobile()
+    {
+        $userAgent = request()->header('User-Agent');
+        return preg_match('/(android|iphone|ipad|mobile)/i', $userAgent);
+    }
+    
     public function index()
     {
         // Total Siswa
@@ -46,35 +53,33 @@ class DashboardController extends Controller
             ->avg('nilai');
         $rataRataNilai = round($rataRataNilai ?? 0, 1);
         
-        // Chart Data - Kehadiran 7 Hari Terakhir
-        $kehadiranChart = Absensi::where('tanggal', '>=', now()->subDays(7))
-            ->select('tanggal', 'status', DB::raw('count(*) as total'))
-            ->groupBy('tanggal', 'status')
-            ->orderBy('tanggal')
-            ->get()
-            ->groupBy('tanggal');
-        
+        // Chart Data - Kehadiran per Minggu (4 minggu terakhir)
+        $weeks = 4;
         $chartLabels = [];
         $chartHadir = [];
         $chartTidakHadir = [];
-        
-        for ($i = 6; $i >= 0; $i--) {
-            $tanggal = now()->subDays($i)->format('Y-m-d');
-            $chartLabels[] = now()->subDays($i)->format('d/m');
-            
-            $hadir = 0;
+
+        for ($i = $weeks - 1; $i >= 0; $i--) {
+            $startOfWeek = now()->startOfWeek()->subWeeks($i)->copy();
+            $endOfWeek = $startOfWeek->copy()->endOfWeek();
+
+            $label = $startOfWeek->format('d/m') . ' - ' . $endOfWeek->format('d/m');
+            $chartLabels[] = $label;
+
+            $data = Absensi::whereBetween('tanggal', [$startOfWeek->format('Y-m-d'), $endOfWeek->format('Y-m-d')])
+                ->select('status', DB::raw('count(*) as total'))
+                ->groupBy('status')
+                ->get()
+                ->keyBy('status');
+
+            $hadir = isset($data['Hadir']) ? $data['Hadir']->total : 0;
             $tidakHadir = 0;
-            
-            if (isset($kehadiranChart[$tanggal])) {
-                foreach ($kehadiranChart[$tanggal] as $data) {
-                    if ($data->status == 'Hadir') {
-                        $hadir = $data->total;
-                    } else {
-                        $tidakHadir += $data->total;
-                    }
+            foreach ($data as $status => $d) {
+                if ($status != 'Hadir') {
+                    $tidakHadir += $d->total;
                 }
             }
-            
+
             $chartHadir[] = $hadir;
             $chartTidakHadir[] = $tidakHadir;
         }
@@ -85,25 +90,23 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
         
-        // Siswa dengan Kehadiran Terbaik Bulan Ini
-        $siswaTopKehadiran = Siswa::where('status', 'Aktif')
-            ->withCount([
-                'absensis as hadir_count' => function($q) {
-                    $q->whereYear('tanggal', date('Y'))
-                      ->whereMonth('tanggal', date('m'))
-                      ->where('status', 'Hadir');
-                }
-            ])
-            ->orderBy('hadir_count', 'desc')
+        // TOP SISWA - penilaian tertinggi bulan ini (rata-rata nilai)
+        $siswaTopPenilaian = Siswa::where('status', 'Aktif')
+            ->withAvg(['evaluasiSiswas as avg_nilai' => function($q) {
+                $q->whereYear('created_at', date('Y'))
+                  ->whereMonth('created_at', date('m'));
+            }], 'nilai')
+            ->orderByDesc('avg_nilai')
             ->limit(5)
             ->get();
         
-        return view('welcome', compact(
+        $view = $this->isMobile() ? 'dashboard-mobile' : 'welcome';
+        return view($view, compact(
             'totalSiswa', 'siswaAktif', 'siswaNonAktif',
             'totalHadir', 'totalIzin', 'totalSakit', 'totalAlpa', 'persentaseKehadiran',
             'totalEvaluasi', 'rataRataNilai',
             'chartLabels', 'chartHadir', 'chartTidakHadir',
-            'evaluasiTerbaru', 'siswaTopKehadiran'
+            'evaluasiTerbaru', 'siswaTopPenilaian'
         ));
     }
 }

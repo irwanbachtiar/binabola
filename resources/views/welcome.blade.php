@@ -6,104 +6,152 @@
 
 @section('content')
 <!-- Stats Cards -->
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
+<div class="row mb-3">
+    <div class="col-md-3 mb-2">
         <div class="card text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="card-body">
+            <div class="card-body py-2 px-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-white-50 mb-1">Total Siswa</h6>
-                        <h2 class="mb-0">{{ $totalSiswa }}</h2>
-                        <small>Aktif: {{ $siswaAktif }} | Non-Aktif: {{ $siswaNonAktif }}</small>
+                        <h6 class="text-white-50 mb-1 small">Total Siswa</h6>
+                        <h3 class="mb-0 fw-bold">{{ $totalSiswa }}</h3>
+                        <small style="font-size: 0.75rem;">Aktif: {{ $siswaAktif }} | Non: {{ $siswaNonAktif }}</small>
                     </div>
-                    <i class="bi bi-people fs-1"></i>
+                    <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.4;"></i>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="col-md-3 mb-3">
+    <div class="col-md-3 mb-2">
+        <div class="card text-white" style="background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);">
+            <div class="card-body py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1 small">Kelompok U-12</h6>
+                        <h3 class="mb-0 fw-bold">{{ \App\Models\Siswa::whereRaw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 8 AND 12')->count() }}</h3>
+                        <small style="font-size: 0.75rem;">Usia 8-12 tahun</small>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-2">
+        <div class="card text-white" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+            <div class="card-body py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1 small">Kelompok U-7</h6>
+                        <h3 class="mb-0 fw-bold">{{ \App\Models\Siswa::whereRaw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 3 AND 7')->count() }}</h3>
+                        <small style="font-size: 0.75rem;">Usia 3-7 tahun</small>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-2">
         <div class="card text-white bg-success">
-            <div class="card-body">
+            <div class="card-body py-2 px-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-white-50 mb-1">Kehadiran Bulan Ini</h6>
-                        <h2 class="mb-0">{{ $persentaseKehadiran }}%</h2>
-                        <small>{{ $totalHadir }} dari {{ $totalHadir + $totalIzin + $totalSakit + $totalAlpa }} hari</small>
+                        <h6 class="text-white-50 mb-1 small">Kehadiran</h6>
+                        <h3 class="mb-0 fw-bold">{{ $persentaseKehadiran }}%</h3>
+                        <small style="font-size: 0.75rem;">{{ $totalHadir }}/{{ $totalHadir + $totalIzin + $totalSakit + $totalAlpa }} hari</small>
                     </div>
-                    <i class="bi bi-calendar-check fs-1"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-white-50 mb-1">Evaluasi Bulan Ini</h6>
-                        <h2 class="mb-0">{{ $totalEvaluasi }}</h2>
-                        <small>Rata-rata: {{ $rataRataNilai }}</small>
-                    </div>
-                    <i class="bi bi-clipboard-data fs-1"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-white-50 mb-1">Tidak Hadir</h6>
-                        <h2 class="mb-0">{{ $totalIzin + $totalSakit + $totalAlpa }}</h2>
-                        <small>Izin:{{ $totalIzin }} Sakit:{{ $totalSakit }} Alpa:{{ $totalAlpa }}</small>
-                    </div>
-                    <i class="bi bi-exclamation-triangle fs-1"></i>
+                    <i class="bi bi-calendar-check" style="font-size: 2.5rem; opacity: 0.4;"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Charts Row -->
-<div class="row mb-4">
-    <div class="col-md-8 mb-3">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Tren Kehadiran 7 Hari Terakhir</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="kehadiranChart" height="80"></canvas>
+<!-- Second Row Stats -->
+<div class="row mb-3">
+    <div class="col-md-4 mb-2">
+        <div class="card text-white bg-info">
+            <div class="card-body py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1 small">Evaluasi Bulan Ini</h6>
+                        <h3 class="mb-0 fw-bold">{{ $totalEvaluasi }}</h3>
+                        <small style="font-size: 0.75rem;">Rata-rata: {{ $rataRataNilai }}</small>
+                    </div>
+                    <i class="bi bi-clipboard-data" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
             </div>
         </div>
     </div>
     
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="bi bi-award"></i> Top Kehadiran</h5>
+    {{-- <div class="col-md-4 mb-2">
+        <div class="card text-white bg-warning">
+            <div class="card-body py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1 small">Tidak Hadir</h6>
+                        <h3 class="mb-0 fw-bold">{{ $totalIzin + $totalSakit + $totalAlpa }}</h3>
+                        <small style="font-size: 0.75rem;">I:{{ $totalIzin }} S:{{ $totalSakit }} A:{{ $totalAlpa }}</small>
+                    </div>
+                    <i class="bi bi-exclamation-triangle" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
             </div>
-            <div class="card-body">
-                @forelse($siswaTopKehadiran as $siswa)
-                    <div class="d-flex align-items-center mb-2 pb-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+        </div>
+    </div> --}}
+    
+    {{-- <div class="col-md-4 mb-2">
+        <div class="card text-white bg-secondary">
+            <div class="card-body py-2 px-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1 small">Status Siswa</h6>
+                        <h3 class="mb-0 fw-bold">{{ $siswaAktif }}</h3>
+                        <small style="font-size: 0.75rem;">Aktif: {{ $siswaAktif }} | Non: {{ $siswaNonAktif }}</small>
+                    </div>
+                    <i class="bi bi-check-circle" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-3">
+    <div class="col-md-8 mb-2">
+        <div class="card">
+            <div class="card-header bg-white py-2">
+                <h6 class="mb-0"><i class="bi bi-graph-up"></i> Tren Kehadiran 4 Minggu Terakhir</h6>
+            </div>
+            <div class="card-body py-2">
+                <canvas id="kehadiranChart" height="70"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-2">
+        <div class="card">
+            <div class="card-header bg-white py-2">
+                <h6 class="mb-0"><i class="bi bi-award"></i> TOP SISWA</h6>
+            </div>
+            <div class="card-body py-2">
+                @forelse($siswaTopPenilaian as $siswa)
+                    <div class="d-flex align-items-center mb-2 pb-1 {{ !$loop->last ? 'border-bottom' : '' }}">
                         @if($siswa->foto)
-                            <img src="{{ asset($siswa->foto) }}" alt="Foto" class="rounded-circle me-2" style="width: 35px; height: 35px; object-fit: cover;">
+                            <img src="{{ asset($siswa->foto) }}" alt="Foto" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
                         @else
-                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
-                                <i class="bi bi-person text-white"></i>
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                <i class="bi bi-person text-white" style="font-size: 0.8rem;"></i>
                             </div>
                         @endif
                         <div class="flex-grow-1">
-                            <strong class="d-block">{{ $siswa->nama }}</strong>
-                            <small class="text-muted">{{ $siswa->hadir_count }} hari hadir</small>
+                            <strong class="d-block" style="font-size: 0.85rem;">{{ $siswa->nama }}</strong>
+                            <small class="text-muted" style="font-size: 0.7rem;">Avg: {{ $siswa->avg_nilai ? number_format($siswa->avg_nilai,1) : '-' }}</small>
                         </div>
-                        <span class="badge bg-success">{{ $loop->iteration }}</span>
+                        <span class="badge bg-success" style="font-size: 0.7rem;">{{ $loop->iteration }}</span>
                     </div>
                 @empty
-                    <p class="text-muted text-center">Belum ada data</p>
+                    <p class="text-muted text-center mb-0">Belum ada data</p>
                 @endforelse
             </div>
         </div>
@@ -111,7 +159,7 @@
 </div>
 
 <!-- Recent Activities -->
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header bg-white">
@@ -161,11 +209,11 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
 <script>
 // Kehadiran Chart
 const ctx = document.getElementById('kehadiranChart').getContext('2d');

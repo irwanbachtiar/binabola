@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Guide - BinaBola App</title>
+    <link href="/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .guide-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .guide-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 24px;
+        }
+        .guide-header img {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 4px;
+        }
+        .badge-primary { background: #e7f1ff; color: #0066cc; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 800px;">
+        <button onclick="window.print()" class="btn btn-light print-btn">
+            <i class="bi bi-printer"></i> Print
+        </button>
+
+        <!-- Header -->
+        <div class="guide-header">
+            <img src="/icons/icon-192.png" alt="BinaBola" width="80" height="80">
+            <h1 class="mt-3 mb-2">BinaBola App</h1>
+            <p class="mb-0">Quick Reference Guide</p>
+        </div>
+
+        <!-- Cara Membuka App -->
+        <div class="guide-card">
+            <h4><i class="bi bi-phone text-primary"></i> Cara Membuka Aplikasi</h4>
+            <hr>
+            
+            <div class="mb-3">
+                <span class="step-number">1</span>
+                <strong>Cari icon BinaBola</strong> di home screen atau app drawer
+            </div>
+            
+            <div class="mb-3">
+                <span class="step-number">2</span>
+                <strong>Tap/Klik icon</strong> untuk membuka aplikasi
+            </div>
+            
+            <div class="mb-0">
+                <span class="step-number">3</span>
+                <strong>Aplikasi terbuka fullscreen</strong> seperti native app
+            </div>
+        </div>
+
+        <!-- Fitur Utama -->
+        <div class="guide-card">
+            <h4><i class="bi bi-star text-warning"></i> Fitur Utama</h4>
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-lightning-charge text-primary"></i> Akses Cepat</h6>
+                    <p class="small text-muted mb-0">Buka langsung dari home screen tanpa browser</p>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-wifi-off text-warning"></i> Offline Support</h6>
+                    <p class="small text-muted mb-0">Tetap bisa akses halaman yang sudah di-cache</p>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-arrow-clockwise text-success"></i> Auto Update</h6>
+                    <p class="small text-muted mb-0">Update otomatis saat ada versi baru</p>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <h6><i class="bi bi-save text-info"></i> Data Tersimpan</h6>
+                    <p class="small text-muted mb-0">Login dan cache tersimpan di device</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="guide-card">
+            <h4><i class="bi bi-lightning text-success"></i> Quick Actions (Long-Press Icon)</h4>
+            <hr>
+            
+            <div class="d-flex flex-wrap">
+                <span class="feature-badge badge-primary">
+                    <i class="bi bi-house-door"></i> Dashboard
+                </span>
+                <span class="feature-badge badge-success">
+                    <i class="bi bi-calendar-check"></i> Absensi
+                </span>
+                <span class="feature-badge badge-info">
+                    <i class="bi bi-clipboard-data"></i> Penilaian
+                </span>
+            </div>
+            
+            <p class="small text-muted mt-2 mb-0">
+                <i class="bi bi-info-circle"></i> Android only - Long-press icon untuk akses cepat
+            </p>
+        </div>
+
+        <!-- Status Indicator -->
+        <div class="guide-card">
+            <h4><i class="bi bi-info-circle text-info"></i> Status Indicator</h4>
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2">
+                            <i class="bi bi-phone"></i> Mode Aplikasi
+                        </span>
+                        <small class="text-muted">Running as app</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-warning text-dark me-2">
+                            <i class="bi bi-wifi-off"></i> Mode Offline
+                        </span>
+                        <small class="text-muted">No internet</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-primary me-2">
+                            <i class="bi bi-download"></i> Install
+                        </span>
+                        <small class="text-muted">Install app prompt</small>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-success me-2">
+                            <i class="bi bi-arrow-repeat"></i> Update
+                        </span>
+                        <small class="text-muted">New version available</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="guide-card">
+            <h4><i class="bi bi-tools text-danger"></i> Troubleshooting</h4>
+            <hr>
+            
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Masalah</th>
+                        <th>Solusi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>App lambat</td>
+                        <td>
+                            <small>
+                                <i class="bi bi-1-circle"></i> Check koneksi internet<br>
+                                <i class="bi bi-2-circle"></i> Clear cache browser<br>
+                                <i class="bi bi-3-circle"></i> Restart device
+                            </small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Data tidak update</td>
+                        <td>
+                            <small>
+                                <i class="bi bi-1-circle"></i> Pull to refresh (swipe down)<br>
+                                <i class="bi bi-2-circle"></i> Check online/offline status<br>
+                                <i class="bi bi-3-circle"></i> Logout dan login ulang
+                            </small>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Icon tidak muncul</td>
+                        <td>
+                            <small>
+                                <i class="bi bi-1-circle"></i> Check app drawer (Android)<br>
+                                <i class="bi bi-2-circle"></i> Restart device<br>
+                                <i class="bi bi-3-circle"></i> Reinstall app
+                            </small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Uninstall -->
+        <div class="guide-card">
+            <h4><i class="bi bi-trash text-danger"></i> Cara Uninstall</h4>
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-4 mb-2">
+                    <strong>Android</strong>
+                    <p class="small text-muted mb-0">Long-press icon → Uninstall</p>
+                </div>
+                
+                <div class="col-md-4 mb-2">
+                    <strong>iOS</strong>
+                    <p class="small text-muted mb-0">Long-press → Remove App</p>
+                </div>
+                
+                <div class="col-md-4 mb-2">
+                    <strong>Desktop</strong>
+                    <p class="small text-muted mb-0">chrome://apps → Remove</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shortcuts -->
+        <div class="guide-card">
+            <h4><i class="bi bi-keyboard text-primary"></i> Keyboard Shortcuts (Desktop)</h4>
+            <hr>
+            
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <kbd>F5</kbd> atau <kbd>Ctrl + R</kbd>
+                    <small class="d-block text-muted">Refresh page</small>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <kbd>Ctrl + Shift + R</kbd>
+                    <small class="d-block text-muted">Hard refresh (clear cache)</small>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <kbd>F12</kbd>
+                    <small class="d-block text-muted">Open DevTools (debug)</small>
+                </div>
+                
+                <div class="col-md-6 mb-2">
+                    <kbd>Ctrl + P</kbd>
+                    <small class="d-block text-muted">Print page</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="guide-card">
+            <h4><i class="bi bi-lightbulb text-warning"></i> Tips & Best Practices</h4>
+            <hr>
+            
+            <ul class="mb-0">
+                <li>Selalu buka app dari <strong>home screen</strong>, bukan browser</li>
+                <li><strong>Update</strong> aplikasi saat ada notifikasi update</li>
+                <li>Pastikan <strong>online</strong> saat input data absensi/evaluasi</li>
+                <li><strong>Pull to refresh</strong> untuk lihat data terbaru</li>
+                <li><strong>Logout</strong> jika menggunakan shared device</li>
+                <li><strong>Backup</strong> data penting dengan screenshot</li>
+            </ul>
+        </div>
+
+        <!-- URLs -->
+        <div class="guide-card bg-light">
+            <h6 class="mb-3"><i class="bi bi-link-45deg"></i> Useful Links</h6>
+            
+            <div class="small">
+                <div class="mb-2">
+                    <strong>Main App:</strong><br>
+                    <code>http://127.0.0.1:8000</code>
+                </div>
+                
+                <div class="mb-2">
+                    <strong>Welcome Page:</strong><br>
+                    <code>http://127.0.0.1:8000/welcome-pwa</code>
+                </div>
+                
+                <div class="mb-2">
+                    <strong>PWA Test:</strong><br>
+                    <code>http://127.0.0.1:8000/pwa-test.html</code>
+                </div>
+                
+                <div class="mb-0">
+                    <strong>Quick Guide:</strong><br>
+                    <code>http://127.0.0.1:8000/quick-guide.html</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-light btn-sm">
+                <i class="bi bi-house-door"></i> Kembali ke App
+            </a>
+            <a href="/welcome-pwa" class="btn btn-light btn-sm">
+                <i class="bi bi-info-circle"></i> Welcome Page
+            </a>
+            <a href="/pwa-test.html" class="btn btn-light btn-sm">
+                <i class="bi bi-gear"></i> PWA Test
+            </a>
+        </div>
+
+        <p class="text-center text-white mt-4 small">
+            BinaBola PWA v6 © 2025<br>
+            Progressive Web App
+        </p>
+    </div>
+</body>
+</html>

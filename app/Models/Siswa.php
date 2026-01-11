@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Models\User;
 
 class Siswa extends Model
 {
@@ -11,6 +12,7 @@ class Siswa extends Model
         'nama',
         'foto',
         'tanggal_lahir',
+        'tanggal_masuk',
         'minat_posisi',
         'telepon',
         'email',
@@ -18,10 +20,12 @@ class Siswa extends Model
         'tinggi_badan',
         'berat_badan',
         'status',
+        'paket_iuran_id',
     ];
     
     protected $casts = [
-        'tanggal_lahir' => 'date',
+        'tanggal_lahir' => 'datetime',
+        'tanggal_masuk' => 'datetime',
         'minat_posisi' => 'array',
     ];
     
@@ -59,6 +63,26 @@ class Siswa extends Model
     }
     
     /**
+     * Get kelompok umur siswa (U-7 atau U-12)
+     */
+    public function getKelompokUmurAttribute()
+    {
+        if (!$this->tanggal_lahir) {
+            return '-';
+        }
+        
+        $umur = $this->tanggal_lahir->age;
+        
+        if ($umur >= 3 && $umur <= 7) {
+            return 'U-7';
+        } elseif ($umur >= 8 && $umur <= 12) {
+            return 'U-12';
+        } else {
+            return '-';
+        }
+    }
+    
+    /**
      * Get minat posisi sebagai string dengan comma
      */
     public function getMinatPosisiStringAttribute()
@@ -67,7 +91,19 @@ class Siswa extends Model
             return '-';
         }
         
-        return implode(', ', $this->minat_posisi);
+        // Handle if minat_posisi is already an array
+        if (is_array($this->minat_posisi)) {
+            return implode(', ', $this->minat_posisi);
+        }
+        
+        // Handle if it's a JSON string
+        $decoded = json_decode($this->minat_posisi, true);
+        if (is_array($decoded)) {
+            return implode(', ', $decoded);
+        }
+        
+        // Fallback: return as is if it's a simple string
+        return $this->minat_posisi;
     }
     
     /**
@@ -76,5 +112,45 @@ class Siswa extends Model
     public function absensis()
     {
         return $this->hasMany(Absensi::class);
+    }
+
+    /**
+     * Relationship dengan evaluasi siswa
+     */
+    public function evaluasiSiswas()
+    {
+        return $this->hasMany(EvaluasiSiswa::class);
+    }
+
+    /**
+     * Relationship: siswa connected with parent users (orangtua)
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'siswa_user');
+    }
+
+    /**
+     * Relationship: siswa has one paket iuran
+     */
+    public function paketIuran()
+    {
+        return $this->belongsTo(PaketIuran::class, 'paket_iuran_id');
+    }
+
+    /**
+     * Relationship: siswa has many pembayaran
+     */
+    public function pembayarans()
+    {
+        return $this->hasMany(PembayaranIuran::class);
+    }
+
+    /**
+     * Relationship: siswa has many tagihan
+     */
+    public function tagihans()
+    {
+        return $this->hasMany(TagihanSiswa::class);
     }
 }

@@ -21,6 +21,10 @@
             </div>
             <div class="card-body">
                 <div id="successAlert" class="alert alert-success d-none"></div>
+                <div id="holidayWarning" class="alert alert-warning d-none">
+                    <i class="bi bi-exclamation-triangle"></i> <strong>Perhatian!</strong> 
+                    <span id="holidayMessage"></span>
+                </div>
                 
                 <form id="absensiForm">
                     @csrf
@@ -127,6 +131,28 @@
 
 @push('scripts')
 <script>
+// Data hari libur dari server
+const hariLibur = {!! json_encode($hariLibur) !!};
+
+// Check hari libur saat tanggal diubah
+document.querySelector('input[name="tanggal"]').addEventListener('change', function(e) {
+    const selectedDate = e.target.value;
+    const warning = document.getElementById('holidayWarning');
+    const message = document.getElementById('holidayMessage');
+    const btnSimpan = document.getElementById('btnSimpan');
+    
+    if (hariLibur[selectedDate]) {
+        warning.classList.remove('d-none');
+        message.textContent = 'Tanggal yang dipilih adalah hari libur: ' + hariLibur[selectedDate];
+        btnSimpan.disabled = true;
+        btnSimpan.innerHTML = '<i class="bi bi-lock"></i> Tidak Dapat Input (Hari Libur)';
+    } else {
+        warning.classList.add('d-none');
+        btnSimpan.disabled = false;
+        btnSimpan.innerHTML = '<i class="bi bi-save"></i> Simpan Absensi';
+    }
+});
+
 // Set semua status
 function tandaiSemua(status) {
     document.querySelectorAll(`input[type="radio"][value="${status}"]`).forEach(radio => {
@@ -168,8 +194,7 @@ document.getElementById('absensiForm').addEventListener('submit', function(e) {
             return response.json();
         } else {
             return response.text().then(text => {
-                console.error('Response HTML:', text);
-                throw new Error('Server mengembalikan HTML, bukan JSON. Cek console untuk detail.');
+                throw new Error('Server mengembalikan HTML, bukan JSON.');
             });
         }
     })
@@ -184,7 +209,6 @@ document.getElementById('absensiForm').addEventListener('submit', function(e) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         alert('Terjadi kesalahan: ' + error.message);
     })
     .finally(() => {

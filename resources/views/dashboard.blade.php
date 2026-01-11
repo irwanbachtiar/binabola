@@ -22,12 +22,44 @@
         </div>
     </div>
     <div class="col-md-3">
+        <div class="card text-white" style="background: linear-gradient(135deg, #20c997 0%, #17a2b8 100%);">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Kelompok U-12</h6>
+                        <h2 class="card-title mb-0">{{ \App\Models\Siswa::whereRaw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 8 AND 12')->count() }}</h2>
+                        <small style="opacity: 0.9;">Umur 8-12 tahun</small>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Kelompok U-7</h6>
+                        <h2 class="card-title mb-0">{{ \App\Models\Siswa::whereRaw('TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) BETWEEN 3 AND 7')->count() }}</h2>
+                        <small style="opacity: 0.9;">Umur 3-7 tahun</small>
+                    </div>
+                    <div>
+                        <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
         <div class="card text-white bg-success">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-subtitle mb-2">Siswa Aktif</h6>
-                        <h2 class="card-title mb-0">{{ \App\Models\Siswa::count() }}</h2>
+                        <h2 class="card-title mb-0">{{ \App\Models\Siswa::where('status', 'Aktif')->count() }}</h2>
                     </div>
                     <div>
                         <i class="bi bi-check-circle-fill" style="font-size: 3rem; opacity: 0.5;"></i>
@@ -36,7 +68,10 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
         <div class="card text-white bg-warning">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
@@ -51,16 +86,31 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card text-white bg-info">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6 class="card-subtitle mb-2">Pelatih</h6>
-                        <h2 class="card-title mb-0">0</h2>
+                        <h2 class="card-title mb-0">{{ \App\Models\User::where('role', 'pelatih')->count() }}</h2>
                     </div>
                     <div>
                         <i class="bi bi-person-badge-fill" style="font-size: 3rem; opacity: 0.5;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-secondary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Orang Tua</h6>
+                        <h2 class="card-title mb-0">{{ \App\Models\User::where('role', 'orangtua')->count() }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-person-hearts" style="font-size: 3rem; opacity: 0.5;"></i>
                     </div>
                 </div>
             </div>

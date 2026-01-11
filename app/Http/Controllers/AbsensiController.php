@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Siswa;
+use App\Models\KategoriPenilaian;
+use App\Models\EvaluasiSiswa;
+use App\Models\HariLibur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +23,12 @@ class AbsensiController extends Controller
             ->pluck('status', 'siswa_id')
             ->toArray();
         
-        return view('absensi.index', compact('siswas', 'today', 'absensiHariIni'));
+        // Get active holidays untuk validasi client-side
+        $hariLibur = HariLibur::where('aktif', true)
+            ->pluck('keterangan', 'tanggal')
+            ->toArray();
+        
+        return view('absensi.index', compact('siswas', 'today', 'absensiHariIni', 'hariLibur'));
     }
     
     // Simpan absensi (batch untuk semua siswa sekaligus)
@@ -35,6 +43,18 @@ class AbsensiController extends Controller
                     'absensi' => 'required|array|min:1',
                     'absensi.*' => 'required|in:Hadir,Izin,Sakit,Alpa',
                 ]);
+                
+                // Validasi: Cek apakah tanggal adalah hari libur
+                if (HariLibur::isHoliday($validated['tanggal'])) {
+                    $holiday = HariLibur::where('tanggal', $validated['tanggal'])
+                        ->where('aktif', true)
+                        ->first();
+                    
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tidak dapat melakukan absensi pada hari libur: ' . $holiday->keterangan
+                    ], 422);
+                }
                 
                 DB::beginTransaction();
                 
@@ -57,6 +77,11 @@ class AbsensiController extends Controller
                 }
                 
                 Absensi::insert($dataAbsensi);
+                
+                // Note: Evaluasi tidak dibuat otomatis di sini.
+                // Evaluasi hanya dibuat melalui halaman input evaluasi.
+                // Logic pengecekan status absensi ada di EvaluasiController::store()
+                // yang akan otomatis set nilai 0 untuk siswa tidak hadir.
                 
                 DB::commit();
                 
@@ -88,6 +113,15 @@ class AbsensiController extends Controller
                 'absensi' => 'required|array|min:1',
                 'absensi.*' => 'required|in:Hadir,Izin,Sakit,Alpa',
             ]);
+            
+            // Validasi: Cek apakah tanggal adalah hari libur
+            if (HariLibur::isHoliday($validated['tanggal'])) {
+                $holiday = HariLibur::where('tanggal', $validated['tanggal'])
+                    ->where('aktif', true)
+                    ->first();
+                
+                return back()->with('error', 'Tidak dapat melakukan absensi pada hari libur: ' . $holiday->keterangan);
+            }
             
             DB::beginTransaction();
             

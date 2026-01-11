@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Define gates for permissions
+        Gate::define('manage-evaluasi', function ($user) {
+            return in_array($user->role, ['admin', 'pelatih']);
+        });
     }
 }
