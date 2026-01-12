@@ -65,7 +65,7 @@ class EvaluasiController extends Controller
         });
         
         $view = $this->isMobile() ? 'evaluasi.index-mobile' : 'evaluasi.index';
-        return view($view, compact('siswaU12', 'siswaU7'));
+        return view($view, compact('siswas', 'siswaU12', 'siswaU7'));
     }
     
     // Form input evaluasi per siswa
