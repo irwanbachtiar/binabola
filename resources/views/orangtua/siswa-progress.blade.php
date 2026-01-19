@@ -154,7 +154,9 @@
                     <h5 class="card-title mb-3">
                         <i class="bi bi-graph-up-arrow"></i> Progress Nilai per Minggu
                     </h5>
-                    <canvas id="lineChartProgress" height="60"></canvas>
+                    <div style="position: relative; height: 250px; min-height: 250px; max-height: 250px; width: 100%; overflow: hidden;">
+                        <canvas id="lineChartProgress" width="800" height="250" style="display: block; width: 100% !important; height: 250px !important;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,7 +166,9 @@
                     <h5 class="card-title mb-3 text-center">
                         <i class="bi bi-radar"></i> Nilai per Kategori
                     </h5>
-                    <canvas id="radarChart" height="200"></canvas>
+                    <div style="position: relative; height: 280px; min-height: 280px; max-height: 280px; width: 100%; overflow: hidden;">
+                        <canvas id="radarChart" width="400" height="280" style="display: block; width: 100% !important; height: 280px !important;"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -258,71 +262,81 @@
 @push('scripts')
 <script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
 <script>
+window.addEventListener('load', function() {
     // Chart Line - Progress Nilai
-    const ctxProgress = document.getElementById('lineChartProgress').getContext('2d');
-    new Chart(ctxProgress, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($progressChartData['labels']) !!},
-            datasets: [{
-                label: 'Rata-rata Nilai',
-                data: {!! json_encode($progressChartData['data']) !!},
-                borderColor: '#28a745',
-                backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                tension: 0.4,
-                fill: true,
-                borderWidth: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
+    const canvasProgress = document.getElementById('lineChartProgress');
+    if (canvasProgress) {
+        const ctxProgress = canvasProgress.getContext('2d');
+        new Chart(ctxProgress, {
+            type: 'line',
+            data: {
+                labels: {!! json_encode($progressChartData['labels']) !!},
+                datasets: [{
+                    label: 'Rata-rata Nilai',
+                    data: {!! json_encode($progressChartData['data']) !!},
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 3
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
-                }
-            }
-        }
-    });
-
-    // Chart Radar - Per Kategori
-    const ctxRadar = document.getElementById('radarChart').getContext('2d');
-    new Chart(ctxRadar, {
-        type: 'radar',
-        data: {
-            labels: {!! json_encode($radarChartData['labels']) !!},
-            datasets: [{
-                label: 'Nilai',
-                data: {!! json_encode($radarChartData['data']) !!},
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        stepSize: 20
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
                     }
                 }
+            }
+        });
+    }
+
+    // Chart Radar - Per Kategori
+    const canvasRadar = document.getElementById('radarChart');
+    if (canvasRadar) {
+        const ctxRadar = canvasRadar.getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: {!! json_encode($radarChartData['labels']) !!},
+                datasets: [{
+                    label: 'Nilai',
+                    data: {!! json_encode($radarChartData['data']) !!},
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                    borderWidth: 2
+                }]
             },
-            plugins: {
-                legend: {
-                    display: false
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 }
             }
-        }
-    });
+        });
+    }
+});
 </script>
 @endpush
