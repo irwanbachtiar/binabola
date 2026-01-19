@@ -210,6 +210,13 @@
                                         <i class="bi bi-file-earmark-bar-graph"></i> Laporan
                                     </a>
                                 </li>
+                                
+                                <!-- Menu Data Perbankan -->
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('banking-data*') ? 'active' : '' }}" href="{{ route('banking-data.index') }}">
+                                        <i class="bi bi-bank"></i> Data Perbankan
+                                    </a>
+                                </li>
                             @endif
                         @else
                             <li class="nav-item">

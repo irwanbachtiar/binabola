@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrangtuaController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\BankingDataController;
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -111,6 +112,14 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('kategori-penilaian', App\Http\Controllers\KategoriPenilaianController::class);
         Route::resource('hari-libur', App\Http\Controllers\HariLiburController::class);
     });
+    
+    // Route untuk Banking Data
+    Route::get('/banking-data', [BankingDataController::class, 'index'])->name('banking-data.index');
+    Route::get('/banking-data/create', [BankingDataController::class, 'create'])->name('banking-data.create');
+    Route::post('/banking-data', [BankingDataController::class, 'store'])->name('banking-data.store');
+    Route::get('/banking-data/{id}/edit', [BankingDataController::class, 'edit'])->name('banking-data.edit');
+    Route::put('/banking-data/{id}', [BankingDataController::class, 'update'])->name('banking-data.update');
+    Route::delete('/banking-data/{id}', [BankingDataController::class, 'destroy'])->name('banking-data.destroy');
 });
 
 // Routes untuk Orangtua (role: orangtua)
