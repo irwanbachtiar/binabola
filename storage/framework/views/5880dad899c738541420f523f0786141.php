@@ -192,8 +192,7 @@ document.getElementById('absensiForm').addEventListener('submit', function(e) {
             return response.json();
         } else {
             return response.text().then(text => {
-                console.error('Response HTML:', text);
-                throw new Error('Server mengembalikan HTML, bukan JSON. Cek console untuk detail.');
+                throw new Error('Server mengembalikan HTML, bukan JSON.');
             });
         }
     })
@@ -208,7 +207,6 @@ document.getElementById('absensiForm').addEventListener('submit', function(e) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
         alert('Terjadi kesalahan: ' + error.message);
     })
     .finally(() => {

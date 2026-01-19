@@ -95,13 +95,15 @@
     <!-- Charts -->
     <div class="row mb-4">
         <div class="col-md-8 mb-3">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm" style="height: 250px;">
                 <div class="card-header bg-white">
                     <h5 class="mb-0"><i class="bi bi-graph-up"></i> Progress Mingguan</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: calc(100% - 60px); padding: 15px;">
                     @if($evaluasi->count() > 0)
-                        <canvas id="lineChart" height="100"></canvas>
+                        <div style="position: relative; height: 100%; width: 100%; overflow: hidden;">
+                            <canvas id="lineChart" width="688" height="229" style="display: block; box-sizing: border-box; height: 153px; width: 459px;"></canvas>
+                        </div>
                     @else
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i> Belum ada data evaluasi untuk ditampilkan dalam chart.
@@ -111,13 +113,15 @@
             </div>
         </div>
         <div class="col-md-4 mb-3">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm" style="height: 250px;">
                 <div class="card-header bg-white">
                     <h5 class="mb-0"><i class="bi bi-radar"></i> Rata-rata Per Kategori</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: calc(100% - 60px); padding: 15px;">
                     @if($evaluasi->count() > 0)
-                        <canvas id="radarChart"></canvas>
+                        <div style="position: relative; height: 100%; width: 100%; overflow: hidden;">
+                            <canvas id="radarChart" width="688" height="229" style="display: block; box-sizing: border-box; height: 153px; width: 459px;"></canvas>
+                        </div>
                     @else
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i> Belum ada data evaluasi.
@@ -219,82 +223,7 @@
 @push('scripts')
 <script src="{{ asset('vendor/chartjs/chart.min.js') }}"></script>
 <script>
-    // Line Chart - Weekly Progress
-    @if($evaluasi->count() > 0)
-    const lineCtx = document.getElementById('lineChart').getContext('2d');
-    const weeks = {!! json_encode($weeks) !!};
-    const lineChartData = {!! json_encode($lineChartData) !!};
-    
-    const datasets = Object.keys(lineChartData).map((kategori, index) => ({
-        label: kategori,
-        data: lineChartData[kategori],
-        borderColor: getColor(index),
-        backgroundColor: getColor(index, 0.1),
-        tension: 0.3,
-        fill: true
-    }));
-    
-    const lineChart = new Chart(lineCtx, {
-        type: 'line',
-        data: {
-            labels: weeks.map(w => 'Minggu ' + w),
-            datasets: datasets
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: { stepSize: 20 }
-                }
-            },
-            plugins: {
-                legend: { display: true, position: 'top' },
-                tooltip: { mode: 'index', intersect: false }
-            }
-        }
-    });
-
-    // Radar Chart - Average per Category
-    const radarCtx = document.getElementById('radarChart').getContext('2d');
-    const radarLabels = {!! json_encode(array_keys($radarChartData)) !!};
-    const radarData = {!! json_encode(array_values($radarChartData)) !!};
-    
-    const radarChart = new Chart(radarCtx, {
-        type: 'radar',
-        data: {
-            labels: radarLabels,
-            datasets: [{
-                label: 'Rata-rata Nilai',
-                data: radarData,
-                fill: true,
-                backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                borderColor: 'rgb(102, 126, 234)',
-                pointBackgroundColor: 'rgb(102, 126, 234)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(102, 126, 234)'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: { stepSize: 20 }
-                }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
-    @endif
-
+window.addEventListener('load', function() {
     function getColor(index, alpha = 1) {
         const colors = [
             `rgba(102, 126, 234, ${alpha})`,
@@ -305,5 +234,90 @@
         ];
         return colors[index % colors.length];
     }
+
+    // Line Chart - Weekly Progress
+    @if($evaluasi->count() > 0)
+    const lineCanvas = document.getElementById('lineChart');
+    if (lineCanvas) {
+        const lineCtx = lineCanvas.getContext('2d');
+        const weeks = {!! json_encode($weeks) !!};
+        const lineChartData = {!! json_encode($lineChartData) !!};
+        
+        const datasets = Object.keys(lineChartData).map((kategori, index) => ({
+            label: kategori,
+            data: lineChartData[kategori],
+            borderColor: getColor(index),
+            backgroundColor: getColor(index, 0.1),
+            tension: 0.3,
+            fill: true
+        }));
+        
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: weeks.map(w => 'Minggu ' + w),
+                datasets: datasets
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { stepSize: 20 }
+                    }
+                },
+                plugins: {
+                    legend: { display: true, position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                }
+            }
+        });
+    }
+
+    // Radar Chart - Average per Category
+    const radarCanvas = document.getElementById('radarChart');
+    if (radarCanvas) {
+        const radarCtx = radarCanvas.getContext('2d');
+        const radarLabels = {!! json_encode(array_keys($radarChartData)) !!};
+        const radarData = {!! json_encode(array_values($radarChartData)) !!};
+        
+        const radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [{
+                    label: 'Rata-rata Nilai',
+                    data: radarData,
+                    fill: true,
+                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                    borderColor: 'rgb(102, 126, 234)',
+                    pointBackgroundColor: 'rgb(102, 126, 234)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(102, 126, 234)'
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { stepSize: 20 }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+    @endif
+});
 </script>
 @endpush

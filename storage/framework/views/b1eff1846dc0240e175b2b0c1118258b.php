@@ -96,7 +96,9 @@
                 <h6 class="mb-0"><i class="bi bi-graph-up"></i> Tren Kehadiran 4 Minggu Terakhir</h6>
             </div>
             <div class="card-body py-2">
-                <canvas id="kehadiranChart" height="70"></canvas>
+                <div style="position: relative; height: 300px; min-height: 300px; max-height: 300px; width: 100%; overflow: hidden;">
+                    <canvas id="kehadiranChart" width="800" height="300" style="display: block; width: 100% !important; height: 300px !important;"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -137,48 +139,54 @@
 <?php $__env->startPush('scripts'); ?>
 <script src="<?php echo e(asset('vendor/chartjs/chart.min.js')); ?>"></script>
 <script>
-// Kehadiran Chart
-const ctx = document.getElementById('kehadiranChart').getContext('2d');
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: <?php echo json_encode($chartLabels); ?>,
-        datasets: [
-            {
-                label: 'Hadir',
-                data: <?php echo json_encode($chartHadir); ?>,
-                borderColor: 'rgb(40, 167, 69)',
-                backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                tension: 0.4,
-                fill: true
-            },
-            {
-                label: 'Tidak Hadir',
-                data: <?php echo json_encode($chartTidakHadir); ?>,
-                borderColor: 'rgb(220, 53, 69)',
-                backgroundColor: 'rgba(220, 53, 69, 0.1)',
-                tension: 0.4,
-                fill: true
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            }
+document.addEventListener('DOMContentLoaded', function() {
+    // Kehadiran Chart
+    const canvas = document.getElementById('kehadiranChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const kehadiranChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($chartLabels); ?>,
+            datasets: [
+                {
+                    label: 'Hadir',
+                    data: <?php echo json_encode($chartHadir); ?>,
+                    borderColor: 'rgb(40, 167, 69)',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Tidak Hadir',
+                    data: <?php echo json_encode($chartTidakHadir); ?>,
+                    borderColor: 'rgb(220, 53, 69)',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            animation: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
                 }
             }
         }
-    }
+    });
 });
 </script>
 <?php $__env->stopPush(); ?>

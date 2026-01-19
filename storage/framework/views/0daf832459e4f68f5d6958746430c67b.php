@@ -138,8 +138,6 @@
     </div>
 <?php endif; ?>
 
-
-
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white">
         <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Pilih Tanggal Latihan</h5>
@@ -267,8 +265,6 @@ document.getElementById('formSelectDate').addEventListener('submit', function(e)
 });
 
 function loadSiswa(tanggal, minggu, kelompokUmur = '') {
-    console.log('Loading siswa for tanggal:', tanggal, 'minggu:', minggu, 'kelompok_umur:', kelompokUmur);
-    
     // Show loading
     document.getElementById('loadingMessage').style.display = 'block';
     document.getElementById('siswaContainer').style.display = 'none';
@@ -281,7 +277,6 @@ function loadSiswa(tanggal, minggu, kelompokUmur = '') {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            console.log('Data received:', data);
             document.getElementById('loadingMessage').style.display = 'none';
             
             if (data.siswa.length === 0) {
@@ -432,7 +427,6 @@ function loadSiswa(tanggal, minggu, kelompokUmur = '') {
             document.getElementById('siswaContainer').style.display = 'block';
         })
         .catch(error => {
-            console.error('Error loading siswa:', error);
             document.getElementById('loadingMessage').style.display = 'none';
             alert('Terjadi kesalahan saat memuat data: ' + error.message);
         });

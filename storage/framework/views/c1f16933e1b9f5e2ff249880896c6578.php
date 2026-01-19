@@ -442,10 +442,6 @@
     const monthlyLabels = <?php echo json_encode(array_values($monthlyData)); ?>;
     const monthlyValues = <?php echo json_encode(array_values($monthlyAverages)); ?>;
     
-    console.log('=== MONTHLY CHART DEBUG ===');
-    console.log('Monthly Labels:', monthlyLabels);
-    console.log('Monthly Values:', monthlyValues);
-    
     const monthlyChart = new Chart(monthlyCtx, {
         type: 'line',
         data: {
@@ -493,13 +489,6 @@
     const radarCtx = document.getElementById('radarChart').getContext('2d');
     const radarLabels = <?php echo json_encode(array_keys($radarChartData)); ?>;
     const radarData = <?php echo json_encode(array_values($radarChartData)); ?>;
-    
-    console.log('=== RADAR CHART DEBUG (SHOW) ===');
-    console.log('Siswa Kelompok Umur:', '<?php echo e($siswa->kelompok_umur); ?>');
-    console.log('Radar Labels:', radarLabels);
-    console.log('Radar Values:', radarData);
-    console.log('Full Radar Data:', <?php echo json_encode($radarChartData); ?>);
-    console.log('Label Count:', radarLabels.length);
     
     const radarChart = new Chart(radarCtx, {
         type: 'radar',
